@@ -14,9 +14,12 @@ export async function GET(
   request: Request,
   { params }: { params: { id: string } }
 ) {
+  // Asegúrate de que params.id esté disponible antes de usarlo
+  const id = params.id;
+  
   try {
     const task = await prisma.task.findUnique({
-      where: { id: Number(params.id) },
+      where: { id: Number(id) },
     });
     
     if (!task) {
@@ -41,13 +44,22 @@ export async function PUT(
   request: Request,
   { params }: { params: { id: string } }
 ) {
+  // Asegúrate de que params.id esté disponible antes de usarlo
+  const id = params.id;
+  
   try {
+    const task = await prisma.task.findUnique({
+      where: { id: Number(id) },
+    });
+    
+    if (!task) {
+      return NextResponse.json({ error: 'Tarea no encontrada' }, { status: 404 });
+    }
+
     let title, description, completed;
     try {
       const body = await request.json();
-      title = body.title;
-      description = body.description;
-      completed = body.completed;
+      ({ title, description, completed } = body);
     } catch (e) {
       return NextResponse.json({ error: 'Cuerpo de solicitud JSON inválido' }, { status: 400 });
     }
@@ -57,7 +69,7 @@ export async function PUT(
     }
 
     const updatedTask = await prisma.task.update({
-      where: { id: Number(params.id) },
+      where: { id: Number(id) },
       data: { title, description, completed },
     });
     return NextResponse.json(updatedTask);
@@ -78,9 +90,12 @@ export async function DELETE(
   request: Request,
   { params }: { params: { id: string } }
 ) {
+  // Asegúrate de que params.id esté disponible antes de usarlo
+  const id = params.id;
+  
   try {
     const task = await prisma.task.findUnique({
-      where: { id: Number(params.id) },
+      where: { id: Number(id) },
     });
     
     if (!task) {
@@ -88,7 +103,7 @@ export async function DELETE(
     }
 
     await prisma.task.delete({
-      where: { id: Number(params.id) },
+      where: { id: Number(id) },
     });
     return new NextResponse(null, { status: 204 });
   } catch (error) {
