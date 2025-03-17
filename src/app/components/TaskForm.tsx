@@ -1,6 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Task, TaskInput } from '../types';
 
+/**
+ * Props para el componente TaskForm
+ * @property {Function} onSubmit - Función que maneja el envío del formulario
+ * @property {Task} [initialTask] - Tarea inicial para edición (opcional)
+ * @property {boolean} isEditing - Indica si se está editando una tarea existente
+ * @property {Function} onCancel - Función que maneja la cancelación de la edición
+ */
 interface TaskFormProps {
   onSubmit: (task: TaskInput) => void;
   initialTask?: Task;
@@ -8,24 +15,47 @@ interface TaskFormProps {
   onCancel: () => void;
 }
 
+/**
+ * Componente de formulario para crear y editar tareas
+ * 
+ * Este componente proporciona un formulario que permite al usuario:
+ * - Crear nuevas tareas
+ * - Editar tareas existentes
+ * - Cancelar la edición de una tarea
+ * 
+ * Se adapta automáticamente según si se está creando o editando una tarea.
+ * 
+ * @param {TaskFormProps} props - Propiedades del componente
+ * @returns {JSX.Element} Formulario para crear o editar tareas
+ */
 const TaskForm: React.FC<TaskFormProps> = ({ 
   onSubmit, 
   initialTask, 
   isEditing,
   onCancel 
 }) => {
+  /**
+   * Estado del formulario que contiene los datos de la tarea
+   */
   const [task, setTask] = useState<TaskInput>({
     title: '',
     description: '',
     completed: false
   });
 
+  /**
+   * Efecto que actualiza el estado del formulario cuando se proporciona una tarea inicial
+   */
   useEffect(() => {
     if (initialTask) {
       setTask(initialTask);
     }
   }, [initialTask]);
 
+  /**
+   * Maneja los cambios en los campos de texto
+   * @param {React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>} e - Evento de cambio
+   */
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setTask(prev => ({
@@ -34,6 +64,10 @@ const TaskForm: React.FC<TaskFormProps> = ({
     }));
   };
 
+  /**
+   * Maneja los cambios en el campo de checkbox
+   * @param {React.ChangeEvent<HTMLInputElement>} e - Evento de cambio del checkbox
+   */
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, checked } = e.target;
     setTask(prev => ({
@@ -42,10 +76,15 @@ const TaskForm: React.FC<TaskFormProps> = ({
     }));
   };
 
+  /**
+   * Maneja el envío del formulario
+   * @param {React.FormEvent} e - Evento de envío del formulario
+   */
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit(task);
     if (!isEditing) {
+      // Reiniciar el formulario solo si estamos creando una nueva tarea
       setTask({
         title: '',
         description: '',

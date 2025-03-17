@@ -1,5 +1,11 @@
 'use client';
 
+/**
+ * Aplicación CRUD de gestión de tareas
+ * Este componente es la página principal que gestiona el estado y las operaciones
+ * de la aplicación de tareas, incluyendo crear, leer, actualizar y eliminar tareas.
+ */
+
 import React, { useState, useEffect } from 'react';
 import TaskList from './components/TaskList';
 import TaskForm from './components/TaskForm';
@@ -11,6 +17,9 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
 
+  /**
+   * Obtiene todas las tareas del servidor
+   */
   const fetchTasks = async () => {
     setIsLoading(true);
     try {
@@ -33,6 +42,10 @@ export default function Home() {
     fetchTasks();
   }, []);
 
+  /**
+   * Crea una nueva tarea
+   * @param newTask - Datos de la nueva tarea a crear
+   */
   const handleCreateTask = async (newTask: TaskInput) => {
     try {
       const response = await fetch('/api/tasks', {
@@ -55,6 +68,10 @@ export default function Home() {
     }
   };
 
+  /**
+   * Actualiza una tarea existente
+   * @param updatedTask - Tarea con los datos actualizados
+   */
   const handleUpdateTask = async (updatedTask: Task) => {
     try {
       const response = await fetch(`/api/tasks/${updatedTask.id}`, {
@@ -80,6 +97,10 @@ export default function Home() {
     }
   };
 
+  /**
+   * Elimina una tarea
+   * @param id - Identificador de la tarea a eliminar
+   */
   const handleDeleteTask = async (id: number) => {
     if (!confirm('¿Estás seguro de que quieres eliminar esta tarea?')) {
       return;
@@ -101,6 +122,11 @@ export default function Home() {
     }
   };
 
+  /**
+   * Cambia el estado de completado de una tarea
+   * @param id - Identificador de la tarea
+   * @param completed - Nuevo estado de completado
+   */
   const handleToggleComplete = async (id: number, completed: boolean) => {
     const taskToUpdate = tasks.find(task => task.id === id);
     if (!taskToUpdate) return;
@@ -131,6 +157,10 @@ export default function Home() {
     }
   };
 
+  /**
+   * Prepara una tarea para edición
+   * @param id - Identificador de la tarea a editar
+   */
   const handleEditClick = (id: number) => {
     const taskToEdit = tasks.find(task => task.id === id);
     if (taskToEdit) {
@@ -138,10 +168,17 @@ export default function Home() {
     }
   };
 
+  /**
+   * Cancela la edición de una tarea
+   */
   const handleCancelEdit = () => {
     setEditingTask(null);
   };
 
+  /**
+   * Gestiona el envío del formulario, determinando si es una creación o actualización
+   * @param task - Datos de la tarea a crear o actualizar
+   */
   const handleSubmit = (task: TaskInput) => {
     if (editingTask) {
       handleUpdateTask(task as Task);

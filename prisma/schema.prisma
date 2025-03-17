@@ -1,15 +1,18 @@
+// Este archivo define el esquema de la base de datos para la aplicación de tareas
 datasource db {
     provider = "mysql"
     url = env("DATABASE_URL")
 }
 
+// Define el generador del cliente Prisma para interactuar con la base de datos
 generator cliente {
     provider = "prisma-client-js"
 }
 
+// Modelo Task (Tarea) que representa la estructura de las tareas en la base de datos
 model Task {
-    id Int @id @default(autoincrement())
-    title String
-    description String
-    completed Boolean @default(false)
+    id Int @id @default(autoincrement()) // Identificador único autoincremental
+    title String                         // Título de la tarea
+    description String                   // Descripción detallada de la tarea
+    completed Boolean @default(false)    // Estado de completitud, por defecto es falso
 }

@@ -3,6 +3,13 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
+/**
+ * 📖 Obtiene una tarea específica por su ID
+ * 
+ * @param request - Solicitud HTTP
+ * @param params - Parámetros de la ruta que contienen el ID de la tarea
+ * @returns La tarea solicitada o un mensaje de error
+ */
 export async function GET(
   request: Request,
   { params }: { params: { id: string } }
@@ -23,6 +30,13 @@ export async function GET(
   }
 }
 
+/**
+ * 🔄 Actualiza una tarea existente
+ * 
+ * @param request - Solicitud HTTP con los datos actualizados
+ * @param params - Parámetros de la ruta que contienen el ID de la tarea
+ * @returns La tarea actualizada o un mensaje de error
+ */
 export async function PUT(
   request: Request,
   { params }: { params: { id: string } }
@@ -53,6 +67,13 @@ export async function PUT(
   }
 }
 
+/**
+ * 🗑️ Elimina una tarea específica
+ * 
+ * @param request - Solicitud HTTP
+ * @param params - Parámetros de la ruta que contienen el ID de la tarea a eliminar
+ * @returns Respuesta vacía con código 204 o un mensaje de error
+ */
 export async function DELETE(
   request: Request,
   { params }: { params: { id: string } }

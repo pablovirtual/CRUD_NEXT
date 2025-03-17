@@ -3,6 +3,11 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
+/**
+ * 📋 Obtiene todas las tareas
+ * 
+ * @returns Lista de todas las tareas o un mensaje de error
+ */
 export async function GET() {
   try {
     const tasks = await prisma.task.findMany();
@@ -13,6 +18,12 @@ export async function GET() {
   }
 }
 
+/**
+ * ➕ Crea una nueva tarea
+ * 
+ * @param request - Solicitud HTTP con los datos de la tarea
+ * @returns La tarea creada o un mensaje de error
+ */
 export async function POST(request: Request) {
   try {
     let title, description;
@@ -36,5 +47,4 @@ export async function POST(request: Request) {
     console.error('Error handling request:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
-
 }
